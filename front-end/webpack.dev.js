@@ -2,6 +2,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { merge } from 'webpack-merge';
 import common from './webpack.common.js';
+import webpack  from 'webpack';
 
 // Menentukan __dirname secara manual untuk ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -24,7 +25,6 @@ export default merge(common, {
     static: path.resolve(__dirname, 'dist'),
     port: 8000,
     open: true,
-    liveReload: true,
     client: {
       overlay: {
         errors: true,
