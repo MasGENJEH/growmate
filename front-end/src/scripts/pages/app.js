@@ -5,11 +5,13 @@ class App {
   #content = null;
   #hamburgerMenu = null;
   #mobileNavigation = null;
+  #navigation = null;
 
-  constructor({ content, hamburgerMenu, mobileNavigation }) {
+  constructor({ content, hamburgerMenu, mobileNavigation, navigation }) {
     this.#content = content;
     this.#hamburgerMenu = hamburgerMenu;
-    this.#mobileNavigation = mobileNavigation 
+    this.#mobileNavigation = mobileNavigation;
+    this.#navigation = navigation;
 
     this.#init();
   }
@@ -22,6 +24,7 @@ class App {
     this.#hamburgerMenu.addEventListener('click', (event) => {
       event.stopPropagation();
       this.#mobileNavigation.classList.toggle('active');
+      this.#navigation.classList.toggle('active');
     })
   }
 
