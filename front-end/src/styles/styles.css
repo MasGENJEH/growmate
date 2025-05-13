@@ -107,6 +107,8 @@ header > .navigation > .container > .hamburger-menu > span {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .mobile-navigation > .container > a {
@@ -114,9 +116,121 @@ header > .navigation > .container > .hamburger-menu > span {
   text-decoration: none;
 }
 
-/* Dashboard dan growmate page */
+/* GIF */
+.big-gif-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99;
+  background-color: rgba(0, 0, 0, .4);
+  visibility: hidden;
+}
+
+.big-gif-container.active {
+  visibility: visible;
+}
+
+.big-gif-container > .container {
+  /* border: 1px solid #fff; */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.big-gif-container > .container > .modal-content {
+  width: 100%;
+  height: auto;
+  min-height: 300px;
+  /* background-color: #fff; */
+  /* border-radius: 5px; */
+  /* border: 1px solid #fff; */
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.big-gif-container > .container > .modal-content > .close-content {
+  width: 100%;
+  /* border: 1px solid red; */
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  cursor: pointer;
+}
+
+.big-gif-container > .container > .modal-content > .close-content > .close-button {
+  width: 30px;
+  height: 30px;
+  /* border: 1px solid red; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.big-gif-container > .container > .modal-content > .close-content > .close-button > .bi-x {
+  font-size: 30px;
+  color: #b7b6b6;
+}
+
+.big-gif-container > .container > .modal-content > .close-content > .close-button:hover > .bi-x {
+  color: #cac8c8;
+}
+
+.big-gif-container > .container > .modal-content > .gif-content {
+  width: 100%;
+  /* border: 1px solid #fff; */
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  padding-right: 25px;
+}
+
+.big-gif-container > .container > .modal-content > .gif-content > .main-content {
+  width: 100%;
+  min-height: 300px;
+  background-color: #fff;
+  /* border: 1px solid #fff; */
+  border-radius: 4px;
+  position: relative;
+  z-index: 4;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.big-gif-container > .container > .modal-content > .gif-content > .main-content > img {
+  width: 100%;
+}
+
+/* Animation */
+@keyframes grow {
+  0% {
+      transform: scale(.7);
+  } 50% {
+      transform: scale(1);
+  } 70% {
+      transform: scale(.9);
+  } 100% {
+      transform: scale(1);
+  }
+}
+
+.big-gif-container.active > .container > .modal-content {
+  animation: grow .4s ease alternate forwards;
+}
+
+/* Dashboard, growmate, and disease classfication page */
 .dashboard-content,
-.growmate-content {
+.growmate-content,
+.main-feature-content {
   margin-top: 60px;
   width: 100%;
   /* border: 1px solid red; */
@@ -126,7 +240,8 @@ header > .navigation > .container > .hamburger-menu > span {
   gap: 50px;
 }
 
-.dashboard-content > .container {
+.dashboard-content > .container,
+.main-feature-content > .container {
   display: flex;
   flex-direction: column;
   gap: 50px;
@@ -141,7 +256,8 @@ header > .navigation > .container > .hamburger-menu > span {
   align-items: center;
 }
 
-.dashboard-content > .container > .description > p {
+.dashboard-content > .container > .description > p,
+.main-feature-content > .container > .description > p {
   text-align: center;
   font-size: 18px;
 }
@@ -179,7 +295,7 @@ header > .navigation > .container > .hamburger-menu > span {
   /* border: 1px solid red; */
   border-radius: 5px;
   min-height: 300px;
-  box-shadow: 0 2px 8px 1px rgba(93, 91, 91, 0.15);
+  box-shadow: 0px 5px 5px 1px rgba(0, 0, 0, 0.15);
   border: none;
   display: flex;
   flex-direction: column;
@@ -307,7 +423,8 @@ header > .navigation > .container > .hamburger-menu > span {
   width: 100%;
 }
 
-.dashboard-content > .tutorial > .container > .gif-container > .gif-caption {
+.dashboard-content > .tutorial > .container > .gif-container > .gif-caption,
+.big-gif-container > .container > .modal-content > .gif-content > .main-content > .gif-caption {
   width: 60px;
   height: 50px;
   border-radius: 7px;
@@ -319,7 +436,8 @@ header > .navigation > .container > .hamburger-menu > span {
   z-index: 3;
 }
 
-.dashboard-content > .tutorial > .container > .gif-container > .gif-caption > p {
+.dashboard-content > .tutorial > .container > .gif-container > .gif-caption > p,
+.big-gif-container > .container > .modal-content > .gif-content > .main-content > .gif-caption > p {
   color: #fff;
   font-weight: 600;
 }
@@ -349,6 +467,107 @@ header > .navigation > .container > .hamburger-menu > span {
 .dashboard-content > .container > .contact > .point > p,
 .dashboard-content > .container > .contact > p {
   text-align: center;
+}
+
+.main-feature-content > .jumbotron {
+  width: 100%;
+  /* border: 1px solid red; */
+  min-height: 100px;
+  position: relative;
+  z-index: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+} 
+
+.main-feature-content > .jumbotron > img {
+  width: 100%;
+}
+
+.main-feature-content > .jumbotron > .title {
+  position: absolute;
+  z-index: 3;
+  text-align: center;
+  font-weight: 800;
+  font-size: 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  text-shadow: 0px 10px 10px rgba(0, 0, 0, 0.8);
+  
+}
+
+.main-feature-content > .jumbotron > .title > span {
+  display: block;
+  text-align: center;
+  text-shadow: 0px 10px 10px rgba(0, 0, 0, 0.8);
+}
+
+.main-feature-content > .container > .description {
+  width: 100%;
+  /* border: 1px solid red; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.main-feature-content > .container > .recomendation {
+  width: 100%;
+  /* border: 1px solid red; */
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 5px 5px 1px rgba(0, 0, 0, 0.15);
+  min-height: 100px;
+  border-radius: 5px;
+  margin-bottom: 50px;
+}
+
+.main-feature-content > .container > .recomendation > .top-content {
+  height: 40px;
+  border-bottom: 1px solid #ced4da;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 20px;
+}
+
+.main-feature-content > .container > .recomendation > .top-content > .bi-search {
+  color: #202020;
+}
+
+.main-feature-content > .container > .recomendation > .top-content > p {
+  font-weight: 600;
+}
+
+.main-feature-content > .container > .recomendation > .bottom-content {
+  min-height: 100px;
+  /* border: 1px solid red; */
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.main-feature-content > .container > .recomendation > .bottom-content > .item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  /* border: 1px solid red; */
+}
+
+.main-feature-content > .container > .recomendation > .bottom-content > .item > .title {
+  font-weight: 600;
+}
+
+.main-feature-content > .container > .recomendation > .bottom-content > .item > ul {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
 }
 
 /* Footer */
@@ -385,7 +604,9 @@ footer > .container > p {
 }
 
 @media screen and (max-width: 768px) {
-  /*  */
+  .main-feature-content > .jumbotron > .title {
+    font-size: 60px;
+  }
 }
 
 /* Mobile */
@@ -399,15 +620,24 @@ footer > .container > p {
     display: none;
   }
 
-  .dashboard-content > .container > .description > p {
+  .dashboard-content > .container > .description > p,
+  .main-feature-content > .container > .description > p {
     font-size: 15px;
   }
-}
 
-@media screen and (max-width: 576px) {
+  .main-feature-content > .jumbotron > .title {
+    font-size: 40px;
+  }
+
   .dashboard-content > .container > .main-feature > .card-container {
     grid-template-columns: repeat(1, 1fr);
   } 
+}
+
+@media screen and (max-width: 480px) {
+  .main-feature-content > .jumbotron > .title {
+    font-size: 30px;
+  }
 }
 
 ::-webkit-scrollbar {

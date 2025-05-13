@@ -103,6 +103,24 @@ export default class DashboardPage {
         </div>
       </div>
 
+      <div class="big-gif-container" id="big-gif-container">
+        <div class="container">
+          <div class="modal-content">
+            <div class="close-content">
+              <div class="close-button" id="close-button"><i class="bi bi-x"></i></div>
+            </div>
+            <div class="gif-content">
+              <div class="main-content">
+                <img src="images/gif-1.png">
+                <div class="gif-caption">
+                  <p>GIF</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="container">
         <div class="contact">
           <h2>Hubungi Kami</h2>
@@ -120,6 +138,24 @@ export default class DashboardPage {
 
   async afterRender() {
     // Add any additional functionality or event listeners here
+    this.enlargeGIF();
+    this.closeBigGIF();
+  }
+
+  enlargeGIF () {
+    const gifContainer = document.querySelector('#gif-container');
+    gifContainer ? gifContainer.addEventListener('click', (event) => {
+      event.stopPropagation();
+      document.querySelector('#big-gif-container').classList.toggle('active');
+    }) : null;
+  }
+  
+  closeBigGIF() {
+    const closeButton = document.querySelector('#close-button');
     
+    closeButton ? closeButton.addEventListener('click', (event) => {
+      event.stopPropagation();
+      document.querySelector('#big-gif-container').classList.remove('active');
+    }) : null;
   }
 }
