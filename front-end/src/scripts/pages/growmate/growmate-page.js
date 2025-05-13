@@ -1,7 +1,9 @@
 export default class GrowmatePage {
   async render() {
     return `<div class="growmate-content">
-      <p>Welcome to the Growmate</p>
+      <div class="container">
+        <p>Welcome to the Growmate</p>
+      </div>
     </div>`
   }
 

@@ -111,7 +111,7 @@ export default class DashboardPage {
             <p>📬 Email: growmate.help@gmail.com</p>
             <p>📲 WhatsApp: +62 812-3456-0000</p>
           </div>
-          <p>Butuh bantuan? Klik tombol di atas atau kirim email kapan saja.  Kami siap membantu Anda!</p>
+          <p>Butuh bantuan? Klik tombol di atas atau kirim email kapan saja. Kami siap membantu Anda!</p>
         </div>
       </div>
 

@@ -107,8 +107,6 @@ header > .navigation > .container > .hamburger-menu > span {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  padding-top: 20px;
-  padding-bottom: 20px;
 }
 
 .mobile-navigation > .container > a {
@@ -116,8 +114,9 @@ header > .navigation > .container > .hamburger-menu > span {
   text-decoration: none;
 }
 
-/* Dashboard page */
-.dashboard-content {
+/* Dashboard dan growmate page */
+.dashboard-content,
+.growmate-content {
   margin-top: 60px;
   width: 100%;
   /* border: 1px solid red; */
@@ -365,6 +364,8 @@ footer > .container {
   justify-content: center;
   align-items: center;
   gap: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 footer > .container > p {
@@ -396,6 +397,10 @@ footer > .container > p {
 
   header > .navigation > .container > .right-menu {
     display: none;
+  }
+
+  .dashboard-content > .container > .description > p {
+    font-size: 15px;
   }
 }
 
