@@ -60,7 +60,7 @@ export default class DashboardPage {
               <div class="description">
                 <h4>Penyakit</h4>
                 <p>Kenali jenis penyakit tanaman sejak dini untuk penanganan cepat dan tepat.</p>
-                <a href="#" class="btn more-button">Selengkapnya</a>
+                <a href="#/disease-classification" class="btn more-button">Selengkapnya</a>
               </div>
             </div>
           </div>
@@ -137,7 +137,6 @@ export default class DashboardPage {
   }
 
   async afterRender() {
-    // Add any additional functionality or event listeners here
     this.enlargeGIF();
     this.closeBigGIF();
   }
