@@ -58,6 +58,7 @@ header > .navigation > .container > .left-menu > a {
 header > .navigation > .container > .left-menu > a > img {
   /* border: 1px solid red; */
   height: 60px;
+  display: block !important;
 }
 
 a {
@@ -536,7 +537,7 @@ header > .navigation > .container > .hamburger-menu > span {
   min-height: 100px;
   border-radius: 5px;
   margin-bottom: 50px;
-  border: 1px solid rgba(206, 212, 218, .5);;
+  border: 1px solid rgba(206, 212, 218, .5);
 }
 
 .main-feature-content > .container > .recomendation > .top-content {
@@ -570,6 +571,94 @@ header > .navigation > .container > .hamburger-menu > span {
   flex-direction: column;
   gap: 10px;
   /* border: 1px solid red; */
+}
+
+.main-feature-content > .container > .recomendation > .bottom-content > .item:nth-child(4) {
+  /* border: 1px solid red; */
+  align-items: center;
+}
+
+.main-feature-content > .container > .recomendation > .bottom-content > .item > form {
+  width: 450px;
+  /* border: 1px solid red; */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.main-feature-content > .container > .recomendation > .bottom-content > .item > form > .upload-button-container {
+  width: 100%;
+  /* border: 1px solid red; */
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-feature-content > .container > .recomendation > .bottom-content > .item > form > .upload-button-container > .camera-button {
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: #08811C;
+  border: 1px solid #08811C;
+  border-radius: 5px;
+  color: #fff;
+  font-weight: 600;
+}
+
+.main-feature-content > .container > .recomendation > .bottom-content > .item > form > .upload-button-container > .file-button {
+  background-color: #fff;
+  color: #08811C;
+  font-weight: 600;
+  border: 1px solid #08811C;
+  border-radius: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.main-feature-content > .container > .recomendation > .bottom-content > .item > form > .upload-button-container > .camera-button:hover,
+.main-feature-content > .container > .recomendation > .bottom-content > .item > form > .upload-button-container > .file-button:hover {
+  background-color: #077a1a;
+}
+
+.main-feature-content > .container > .recomendation > .bottom-content > .item > form > .upload-button-container > .file-button:hover {
+  color: #fff;
+}
+
+.main-feature-content > .container > .recomendation > .bottom-content > .item > form > .image-preview {
+  width: 100%;
+  /* border: 1px solid red; */
+  display: flex;
+  gap: 10px;
+}
+
+.main-feature-content > .container > .recomendation > .bottom-content > .item > form > .image-preview > img {
+  width: 100%;
+  border: 6px solid #E9E9E9;
+  border-radius: 5px;
+}
+
+.main-feature-content > .container > .recomendation > .bottom-content > .item > form > .detection-button-container {
+  width: 100%;
+  /* border: 1px solid red; */
+  display: flex;
+  align-items: center;
+}
+
+.main-feature-content > .container > .recomendation > .bottom-content > .item > form > .detection-button-container > .detection-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  background-color: #08811C;
+  border: 1px solid #08811C;
+  color: #fff;
+  font-weight: 600;
+  width: 180px;
+  height: 35px;
+}
+
+.main-feature-content > .container > .recomendation > .bottom-content > .item > form > .detection-button-container > .detection-button:hover {
+  background-color: #077a1a;
 }
 
 .main-feature-content > .container > .recomendation > .bottom-content > .item > .title {
@@ -649,6 +738,19 @@ footer > .container > p {
 @media screen and (max-width: 480px) {
   .main-feature-content > .jumbotron > .title {
     font-size: 30px;
+  }
+
+  .main-feature-content > .container > .recomendation > .bottom-content > .item > form,
+  .main-feature-content > .container > .recomendation > .bottom-content > .item > form > .upload-button-container > .camera-button,
+  .main-feature-content > .container > .recomendation > .bottom-content > .item > form > .upload-button-container > .file-button,
+  .main-feature-content > .container > .recomendation > .bottom-content > .item > form > .detection-button-container > .detection-button {
+    width: 100%;
+  }
+
+  .main-feature-content > .container > .recomendation > .bottom-content > .item > form > .upload-button-container > .camera-button,
+  .main-feature-content > .container > .recomendation > .bottom-content > .item > form > .upload-button-container > .file-button {
+    padding-left: 10px;
+    padding-right: 10px;
   }
 }
 
