@@ -1,5 +1,9 @@
+import Camera from "../../utils/camera.js";
+
 export default class DiseaseClassificationPage {
   #takenDocumentation = null;
+  #camera;
+  #isCameraOpen = false;
 
   async render() {
     return `
@@ -39,12 +43,28 @@ export default class DiseaseClassificationPage {
               <div class="item">
                 <form id="form-upload">
                   <div class="upload-button-container">
-                    <button class="btn camera-button">Ambil Gambar</button>
+                    <button type="button" class="btn camera-button">Buka Kamera</button>
                     <label for="image-file" class="btn file-button">Unggah Gambar</label>
                     <input type="file" id="image-file" name="image-file" style="display: none">
                   </div>
+                  <div class="camera-container" id="camera-container">
+                    <video id="camera-video" class="camera-video">
+                      Video stream not available.
+                    </video>
+
+                    <canvas id="camera-canvas" class="new-form__camera__canvas"></canvas>
+
+                    <div class="new-form__camera__tools">
+                      <select class="form-select" id="camera-select"></select>
+                      <button id="camera-take-button" class="btn camera-take-button" type="button">
+                        Ambil Gambar
+                      </button>
+                    </div>
+                  </div>
                   <div class="image-preview" id="image-preview"></div>
-                  <div class="detection-button-container" id="detection-button-container"></div>
+                  <div class="detection-button-container" id="detection-button-container">
+                    <button type="button" class="detection-button"> Deteksi Sekarang</button>
+                  </div>
                 </form>
               </div>
             </div>
@@ -61,34 +81,145 @@ export default class DiseaseClassificationPage {
   #setupForm() {
     const imageFile = document.querySelector('#image-file');
     const imagePreview = document.querySelector('#image-preview');
-    const detectionButtonContainer = document.querySelector('#detection-button-container');
 
-    imageFile.addEventListener('change', () => {
+    imageFile ? imageFile.addEventListener('change', () => {
       const file = imageFile.files[0];
 
       if (!file) return;
 
       this.#takenDocumentation = {
+        id: `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
         blob: file,
         url: URL.createObjectURL(file),
       };
 
-      const img = document.createElement('img');
-      img.src = this.#takenDocumentation.url;
-      img.alt = 'preview';
-      imagePreview.innerHTML = '';
-      imagePreview.appendChild(img);
+      const picture = this.#takenDocumentation;
 
-      const detectionButton = document.createElement('button');
-      detectionButton.classList.add('detection-button');
-      detectionButton.type = 'button';
-      detectionButton.textContent = 'Deteksi Sekarang';
-      detectionButtonContainer.innerHTML = '';
-      detectionButtonContainer.appendChild(detectionButton);
+      const html = `
+      <button type="button" data-deletepictureid="${picture.id}" class="new-form__documentations__outputs-item__delete-btn">
+        <img src="${picture.url}" alt="preview">
+      </button>
+    `;
+
+      imagePreview.innerHTML = '';
+      imagePreview.innerHTML = html;
+
+      document.querySelector('button[data-deletepictureid]')?.addEventListener('click', (event) => {
+        const pictureId = event.currentTarget.dataset.deletepictureid;
+        const deleted = this.#removePicture(pictureId);
+        if (!deleted) {
+          console.log(`Picture with id ${pictureId} was not found`);
+        }
+        this.#populateTakenPictures();
+
+        const detectionButton = document.querySelector('.detection-button');
+        detectionButton ? detectionButton.classList.remove('active') : null;
+      });
       
+      const detectionButton = document.querySelector('.detection-button');
+      detectionButton ? detectionButton.classList.toggle('active') : null;
+
       this.#setupDecationButton();
+    }) : null
+
+    const cameraContainer = document.querySelector('#camera-container');
+    const cameraButton = document.querySelector('.camera-button');
+    cameraButton ? cameraButton.addEventListener('click', async(event) => {
+      cameraContainer.classList.toggle('active');
+
+      this.#isCameraOpen = cameraContainer.classList.contains('active');
+      
+      if (this.#isCameraOpen) {
+        event.currentTarget.textContent = 'Tutup Kamera';
+        this.#setupCamera();
+        this.#camera.launch();
+        return;
+      }
+
+      event.currentTarget.textContent = 'Buka Kamera';
+      this.#camera.stop();
+    }) : null
+
+  }
+
+  async #addTakenPicture(image) {
+    let blob = image;
+
+    if (image instanceof String) {
+      blob = await convertBase64ToBlob(image, 'image/png');
+    }
+
+    const newDocumentation = {
+      id: `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+      blob: blob,
+    };
+    this.#takenDocumentation = newDocumentation;
+  }
+
+  async #populateTakenPictures() {
+    if (!this.#takenDocumentation) {
+      document.getElementById('image-preview').innerHTML = '';
+      return;
+    }
+
+    const picture = this.#takenDocumentation;
+    const imageUrl = URL.createObjectURL(picture.blob);
+
+    const html = `
+      <button type="button" data-deletepictureid="${picture.id}" class="new-form__documentations__outputs-item__delete-btn">
+        <img src="${imageUrl}" alt="preview">
+      </button>
+    `;
+
+    document.getElementById('image-preview').innerHTML = html;
+
+    document.querySelector('button[data-deletepictureid]')?.addEventListener('click', (event) => {
+      const pictureId = event.currentTarget.dataset.deletepictureid;
+      const deleted = this.#removePicture(pictureId);
+      if (!deleted) {
+        console.log(`Picture with id ${pictureId} was not found`);
+      }
+      this.#populateTakenPictures();
+
+      const detectionButton = document.querySelector('.detection-button');
+      detectionButton ? detectionButton.classList.remove('active') : null;
+    });
+  }
+
+
+  #removePicture(id) {
+    if (this.#takenDocumentation && this.#takenDocumentation.id === id) {
+      const deleted = this.#takenDocumentation;
+      this.#takenDocumentation = null;
+      return deleted;
+    }
+
+    return null;
+  }
+
+
+  #setupCamera() {
+    if (this.#camera) {
+      return;
+    }
+
+    this.#camera = new Camera({
+      video: document.querySelector('#camera-video'),
+      cameraSelect: document.querySelector('#camera-select'),
+      canvas: document.querySelector('#camera-canvas')
     })
 
+    this.#camera.addCheeseButtonListener('#camera-take-button', async () => {
+      const image = await this.#camera.takePicture();
+      // alert(URL.createObjectURL(image));
+      await this.#addTakenPicture(image);
+      await this.#populateTakenPictures();
+
+      const detectionButton = document.querySelector('.detection-button');
+      detectionButton ? detectionButton.classList.toggle('active') : null;
+
+      this.#setupDecationButton();
+    })
   }
 
   #setupDecationButton() {

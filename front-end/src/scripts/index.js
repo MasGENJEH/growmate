@@ -2,6 +2,7 @@
 import '../styles/styles.css'
 
 import App from './pages/app.js';
+import Camera from './utils/camera.js';
 
 // DOM
 document.addEventListener('DOMContentLoaded', async () => {
@@ -16,5 +17,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   window.addEventListener('hashchange', async () => {
     await app.renderPage();
+
+    // Stop all active media
+    Camera.stopAllSteams();
   });
 });
