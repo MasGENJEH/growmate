@@ -1,41 +1,205 @@
+// export default class Camera {
+//   #currentStream;
+//   #streaming = false;
+//   #width = 640;
+//   #height = 0;
+
+//   #videoElement;
+//   #selectCameraElement;
+//   #canvasElement;
+//   #takePictureButton;
+
+//   constructor({ video, cameraSelect, canvas , options = {} }) {
+//     this.#videoElement = video;
+//     this.#selectCameraElement = cameraSelect;
+//     this.#canvasElement = canvas
+
+//     this.#initialListener();
+//   }
+
+//   #initialListener() {
+//     this.#videoElement.oncanplay = () => {
+//       if (this.#streaming) {
+//         return;
+//       }
+
+//       this.#height = (this.#videoElement.videoHeight * this.#width) / this.#videoElement.videoWidth;
+//       this.#canvasElement.setAttribute('width', this.#width);
+//       this.#canvasElement.setAttribute('height', this.#height);
+
+//       this.#streaming = true;
+//     }
+
+//     this.#selectCameraElement.onchange = async () => {
+//       this.stop();
+//       await this.launch();
+//     };
+//   }
+
+//   async #populateDeviceList(stream) {
+//     try {
+//       if (!(stream instanceof MediaStream)) {
+//         return Promise.reject(Error('MediaStream not found!'));
+//       }
+
+//       const { deviceId } = stream.getVideoTracks()[0].getSettings();
+
+//       const enumeratedDevices = await navigator.mediaDevices.enumerateDevices();
+//       const list = enumeratedDevices.filter((device) => {
+//         return device.kind === 'videoinput';
+//       });
+
+//       const html = list.reduce((accumulator, device, currentIndex) => {
+//         return accumulator.concat(`
+//           <option
+//             value="${device.deviceId}"
+//             ${deviceId === device.deviceId ? 'selected' : ''}>
+//             ${device.label || `Camera ${currentIndex + 1}`}  
+//           </option>  
+//         `);
+//       }, '');
+      
+//       this.#selectCameraElement.innerHTML = html; 
+//     } catch(error) {
+//       console.error('#populateDeviceList: error: ', error);
+//     }
+//   }
+
+//   async #getStream() {
+//     try {
+//       const deviceId =
+//         !this.#streaming && !this.#selectCameraElement.value
+//           ? undefined
+//           : { exact: this.#selectCameraElement.value };
+
+//       const stream = await navigator.mediaDevices.getUserMedia({
+//         video: {
+//           aspectRatio: 4 / 3,
+//           deviceId,
+//         },
+//       });
+
+//       // Tampilkan daftar perangkat kamera setelah izin diberikan
+//       await this.#populateDeviceList(stream);
+
+//       // Set ke elemen video dan play saat metadata sudah siap
+//       const videoElement = document.getElementById('camera-video');
+//       if (videoElement) {
+//         videoElement.srcObject = stream;
+
+//         videoElement.onloadedmetadata = () => {
+//           videoElement.play().catch(error => {
+//             console.error('Play error:', error);
+//           });
+//         };
+//       } else {
+//         console.warn('Elemen video tidak ditemukan!');
+//       }
+
+//       return stream;
+//     } catch (error) {
+//       console.error('#getStream: error:', error);
+//       return null;
+//     }
+//   }
+
+//   async launch() {
+//     this.#currentStream = await this.#getStream();
+
+//     // Record all MediaStream in global context
+//     Camera.addNewStream(this.#currentStream);
+
+//     this.#videoElement.srcObject = this.#currentStream;
+//     this.#videoElement.play();
+
+//     await this.#populateDeviceList(this.#currentStream);
+
+//     this.#clearCanvas();
+//   }
+
+
+//   stop() {
+//     if (this.#videoElement) {
+//       this.#videoElement.srcObject = null;
+//       this.#streaming = false;
+//     }
+
+//     if (this.#currentStream instanceof MediaStream) {
+//       this.#currentStream.getTracks().forEach((track) => {
+//         track.stop();
+//       })
+//     }
+
+//     this.#clearCanvas();
+//   }
+
+//   #clearCanvas() {
+//     const context = this.#canvasElement.getContext('2d');
+//     context.fillStyle = '#AAAAAA';
+//     context.fillRect(0, 0, this.#canvasElement.width, this.#canvasElement.height);
+//   }
+
+//   async takePicture() {
+//     if (!(this.#width && this.#height)) {
+//       return null;
+//     }
+
+//     const context = this.#canvasElement.getContext('2d');
+//     this.#canvasElement.width = this.#width;
+//     this.#canvasElement.height = this.#height;
+
+//     context.drawImage(this.#videoElement, 0, 0, this.#width, this.#height);
+
+//     return await new Promise((resolve) => {
+//       this.#canvasElement.toBlob((blob) => resolve(blob));
+//     });
+//   }
+
+//   addCheeseButtonListener(selector, callback) {
+//     this.#takePictureButton = document.querySelector(selector);
+//     this.#takePictureButton.onclick = callback;
+//   }
+
+//   static addNewStream(stream) {
+//     if (!Array.isArray(window.currentStreams)) {
+//       window.currentStreams = [stream];
+//       return;
+//     }
+
+//     window.currentStreams = [...window.currentStreams, stream];
+//   }
+
+//   static stopAllStreams() {
+//     if (!Array.isArray(window.currentStreams)) {
+//       window.currentStreams = [];
+//       return;
+//     }
+
+//     window.currentStreams.forEach((stream) => {
+//       if (stream.active) {
+//         stream.getTracks().forEach((track) => track.stop());
+//       }
+//     })
+//   }
+// }
+
+
 export default class Camera {
   #currentStream;
   #streaming = false;
-  #videoElement;
-  #selectCameraElement;
-  #canvasElement;
-
   #width = 640;
   #height = 0;
 
+  #videoElement;
+  #selectCameraElement;
+  #canvasElement;
   #takePictureButton;
 
-  static addNewStream(stream) {
-    if (!Array.isArray(window.currentStreams)) {
-      window.currentStreams = [stream];
-      return;
-    }
-
-    window.currentStreams = [...window.currentStreams, stream];
-  }
-
-  static stopAllSteams() {
-    if (!Array.isArray(window.currentStreams)) {
-      window.currentStreams = [];
-      return;
-    }
-
-    window.currentStreams.forEach((stream) => {
-      if (stream.active) {
-        stream.getTracks().forEach((track) => track.stop());
-      }
-    })
-  }
-
-  constructor({ video, cameraSelect, canvas, options = {} }) {
+  constructor({ video, cameraSelect, canvas , options = {} }) {
     this.#videoElement = video;
-    this.#selectCameraElement = cameraSelect; 
-    this.#canvasElement = canvas;
+    this.#selectCameraElement = cameraSelect;
+    this.#canvasElement = canvas
+
     this.#initialListener();
   }
 
@@ -45,7 +209,7 @@ export default class Camera {
         return;
       }
 
-      this.#height = ( this.#videoElement.videoHeight * this.#width ) / this.#videoElement.videoWidth;
+      this.#height = (this.#videoElement.videoHeight * this.#width) / this.#videoElement.videoWidth;
       this.#canvasElement.setAttribute('width', this.#width);
       this.#canvasElement.setAttribute('height', this.#height);
 
@@ -55,7 +219,7 @@ export default class Camera {
     this.#selectCameraElement.onchange = async () => {
       await this.stop();
       await this.launch();
-    }
+    };
   }
 
   async #populateDeviceList(stream) {
@@ -66,8 +230,8 @@ export default class Camera {
 
       const { deviceId } = stream.getVideoTracks()[0].getSettings();
 
-      const enumeratedDevice = await navigator.mediaDevices.enumerateDevices();
-      const list = enumeratedDevice.filter((device) => {
+      const enumeratedDevices = await navigator.mediaDevices.enumerateDevices();
+      const list = enumeratedDevices.filter((device) => {
         return device.kind === 'videoinput';
       });
 
@@ -75,16 +239,15 @@ export default class Camera {
         return accumulator.concat(`
           <option
             value="${device.deviceId}"
-            ${deviceId === device.deviceId ? 'selected' : ''}
-          >
-            ${device.label || `Camera ${currentIndex + 1}`}
-          </option>
+            ${deviceId === device.deviceId ? 'selected' : ''}>
+            ${device.label || `Camera ${currentIndex + 1}`}  
+          </option>  
         `);
       }, '');
-
-      this.#selectCameraElement.innerHTML = html;
-    } catch (error) {
-      console.error('#populateDeviceList: error:', error);
+      
+      this.#selectCameraElement.innerHTML = html; 
+    } catch(error) {
+      console.error('#populateDeviceList: error: ', error);
     }
   }
 
@@ -98,10 +261,11 @@ export default class Camera {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           aspectRatio: 4 / 3,
-          deviceId
+          deviceId,
         },
       });
 
+      // Show available camera after camera permission granted
       await this.#populateDeviceList(stream);
 
       return stream;
@@ -114,10 +278,26 @@ export default class Camera {
   async launch() {
     this.#currentStream = await this.#getStream();
 
+    // Record all MediaStream in global context
     Camera.addNewStream(this.#currentStream);
 
     this.#videoElement.srcObject = this.#currentStream;
     this.#videoElement.play();
+
+    this.#clearCanvas();
+  }
+
+  stop() {
+    if (this.#videoElement) {
+      this.#videoElement.srcObject = null;
+      this.#streaming = false;
+    }
+
+    if (this.#currentStream instanceof MediaStream) {
+      this.#currentStream.getTracks().forEach((track) => {
+        track.stop();
+      })
+    }
 
     this.#clearCanvas();
   }
@@ -130,7 +310,7 @@ export default class Camera {
 
   async takePicture() {
     if (!(this.#width && this.#height)) {
-      return null
+      return null;
     }
 
     const context = this.#canvasElement.getContext('2d');
@@ -141,7 +321,7 @@ export default class Camera {
 
     return await new Promise((resolve) => {
       this.#canvasElement.toBlob((blob) => resolve(blob));
-    })
+    });
   }
 
   addCheeseButtonListener(selector, callback) {
@@ -149,18 +329,25 @@ export default class Camera {
     this.#takePictureButton.onclick = callback;
   }
 
-  async stop() {
-    if (this.#videoElement) {
-      this.#videoElement.srcObject = null;
-      this.#streaming = false;
+  static addNewStream(stream) {
+    if (!Array.isArray(window.currentStreams)) {
+      window.currentStreams = [stream];
+      return;
     }
 
-    if (this.#currentStream instanceof MediaStream) {
-      this.#currentStream.getTracks().forEach((track) => {
-        track.stop();
-      });
+    window.currentStreams = [...window.currentStreams, stream];
+  }
+
+  static stopAllStreams() {
+    if (!Array.isArray(window.currentStreams)) {
+      window.currentStreams = [];
+      return;
     }
 
-    this.#clearCanvas();
+    window.currentStreams.forEach((stream) => {
+      if (stream.active) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
+    })
   }
 }

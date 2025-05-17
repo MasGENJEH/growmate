@@ -19,6 +19,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     await app.renderPage();
 
     // Stop all active media
-    Camera.stopAllSteams();
+    Camera.stopAllStreams();
   });
 });

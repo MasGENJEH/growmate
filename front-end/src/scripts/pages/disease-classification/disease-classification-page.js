@@ -1,4 +1,5 @@
 import Camera from "../../utils/camera.js";
+import { convertBase64ToBlob } from '../../utils/index.js';
 
 export default class DiseaseClassificationPage {
   #takenDocumentation = null;
@@ -48,7 +49,9 @@ export default class DiseaseClassificationPage {
                     <input type="file" id="image-file" name="image-file" style="display: none">
                   </div>
                   <div class="camera-container" id="camera-container">
-                    <video id="camera-video" class="camera-video">
+                    
+
+                    <video id="camera-video" class="camera-video" autoplay playsinline>
                       Video stream not available.
                     </video>
 
@@ -75,6 +78,7 @@ export default class DiseaseClassificationPage {
   }
 
   async afterRender() {
+    this.#takenDocumentation = null;
     this.#setupForm();
   }
 
@@ -125,8 +129,8 @@ export default class DiseaseClassificationPage {
     const cameraContainer = document.querySelector('#camera-container');
     const cameraButton = document.querySelector('.camera-button');
     cameraButton ? cameraButton.addEventListener('click', async(event) => {
+      
       cameraContainer.classList.toggle('active');
-
       this.#isCameraOpen = cameraContainer.classList.contains('active');
       
       if (this.#isCameraOpen) {
@@ -146,7 +150,7 @@ export default class DiseaseClassificationPage {
     let blob = image;
 
     if (image instanceof String) {
-      blob = await convertBase64ToBlob(image, 'image/png');
+      blob = convertBase64ToBlob(image, 'image/png');
     }
 
     const newDocumentation = {
@@ -196,7 +200,6 @@ export default class DiseaseClassificationPage {
 
     return null;
   }
-
 
   #setupCamera() {
     if (this.#camera) {
@@ -251,4 +254,41 @@ export default class DiseaseClassificationPage {
       mainRecommendationContent.appendChild(item2);
     }) : null;
   }
+
+  // #setupDecationButton() {
+  //   const detectionButton = document.querySelector('.detection-button');
+  //   detectionButton ? detectionButton.addEventListener('click', (event) => {
+  //     event.stopPropagation();
+
+  //     const mainRecommendationContent = document.querySelector('.main-recommendation-content');
+      
+  //     // Bersihkan hasil sebelumnya
+  //     const oldItems = mainRecommendationContent.querySelectorAll('.item.result-item');
+  //     oldItems.forEach(item => item.remove());
+
+  //     // Tambah hasil baru dengan class result-item agar bisa dihapus nanti
+  //     const item = document.createElement('div');
+  //     item.classList.add('item', 'result-item');
+  //     const title = document.createElement('p');
+  //     title.classList.add('title');
+  //     title.innerHTML = '🔍 Hasil';
+  //     const paragraph = document.createElement('p');
+  //     paragraph.innerHTML = 'Hasil deteksi penyakit akan ditampilkan di sini.';
+  //     item.appendChild(title);
+  //     item.appendChild(paragraph);
+  //     mainRecommendationContent.appendChild(item);  
+
+  //     const item2 = document.createElement('div');
+  //     item2.classList.add('item', 'result-item');
+  //     const title2 = document.createElement('p');
+  //     title2.classList.add('title');
+  //     title2.innerHTML = '💡 Saran';
+  //     const paragraph2 = document.createElement('p');
+  //     paragraph2.innerHTML = 'Saran penanganan penyakit akan ditampilkan di sini.';
+  //     item2.appendChild(title2);
+  //     item2.appendChild(paragraph2);
+  //     mainRecommendationContent.appendChild(item2);
+  //   }) : null;
+  // }
+
 }

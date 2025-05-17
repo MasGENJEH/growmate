@@ -3,9 +3,9 @@ import DiseaseClassificationPage from "../pages/disease-classification/disease-c
 import GrowmatePage from "../pages/growmate/growmate-page.js";
 
 const routes = {
-  '/': new DashboardPage(),
-  '/growmate': new GrowmatePage(),
-  '/disease-classification': new DiseaseClassificationPage()
+  '/': () => new DashboardPage(),
+  '/growmate': () => new GrowmatePage(),
+  '/disease-classification': () => new DiseaseClassificationPage()
 }
 
 export default routes;
