@@ -10,7 +10,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     content: document.querySelector('#main-content'),
     hamburgerMenu: document.querySelector('#hamburger-menu'),
     mobileNavigation: document.querySelector('#mobile-navigation'),
-    navigation: document.querySelector('#navigation')
+    navigation: document.querySelector('#navigation'),
+    sidebarMenu: document.querySelectorAll('.sidebar-menu'),
+    mainMenu: document.querySelector('#main-menu')
   });
 
   await app.renderPage();

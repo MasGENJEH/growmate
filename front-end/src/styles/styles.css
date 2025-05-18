@@ -626,6 +626,15 @@ header > .navigation > .container > .hamburger-menu > span {
   padding-right: 20px;
 }
 
+.main-feature-content > .container > .recomendation > .bottom-content > .item > form > .upload-button-container > .file-button.upload-file {
+  background-color: #08811C;
+  color: #fff;
+}
+
+.main-feature-content > .container > .recomendation > .bottom-content > .item > form > .upload-button-container > .file-button.upload-file:hover {
+  background-color: #077a1a;
+}
+
 .main-feature-content > .container > .recomendation > .bottom-content > .item > form > .upload-button-container > .camera-button:hover,
 .main-feature-content > .container > .recomendation > .bottom-content > .item > form > .upload-button-container > .file-button:hover {
   background-color: #077a1a;

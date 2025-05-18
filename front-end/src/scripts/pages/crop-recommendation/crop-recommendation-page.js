@@ -46,23 +46,8 @@ export default class CropRecommendationPage {
               <div class="item">
                 <form id="form-upload">
                   <div class="upload-button-container">
-                    <button type="button" class="btn camera-button">Buka Kamera</button>
-                    <label for="image-file" class="btn file-button">Unggah Gambar</label>
+                    <label for="image-file" class="btn file-button upload-file">Unggah File</label>
                     <input type="file" id="image-file" name="image-file" style="display: none">
-                  </div>
-                  <div class="camera-container" id="camera-container">
-                    <video id="camera-video" class="camera-video" autoplay playsinline>
-                      Video stream not available.
-                    </video>
-
-                    <canvas id="camera-canvas" class="new-form__camera__canvas"></canvas>
-
-                    <div class="new-form__camera__tools">
-                      <select class="form-select" id="camera-select"></select>
-                      <button id="camera-take-button" class="btn camera-take-button" type="button">
-                        Ambil Gambar
-                      </button>
-                    </div>
                   </div>
                   <div class="image-preview" id="image-preview"></div>
                   <div class="detection-button-container" id="detection-button-container">
@@ -139,42 +124,9 @@ export default class CropRecommendationPage {
 
       this.#setupDecationButton();
     }) : null
-
-    const cameraContainer = document.querySelector('#camera-container');
-    const cameraButton = document.querySelector('.camera-button');
-    cameraButton ? cameraButton.addEventListener('click', async(event) => {
-      
-      cameraContainer.classList.toggle('active');
-      this.#isCameraOpen = cameraContainer.classList.contains('active');
-      
-      if (this.#isCameraOpen) {
-        event.currentTarget.textContent = 'Tutup Kamera';
-        this.#setupCamera();
-        this.#camera.launch();
-        return;
-      }
-
-      event.currentTarget.textContent = 'Buka Kamera';
-      this.#camera.stop();
-    }) : null
-
   }
 
-  async #addTakenPicture(image) {
-    let blob = image;
-
-    if (image instanceof String) {
-      blob = convertBase64ToBlob(image, 'image/png');
-    }
-
-    const newDocumentation = {
-      id: `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
-      blob: blob,
-    };
-    this.#takenDocumentation = newDocumentation;
-  }
-
-  async #populateTakenPictures() {
+   async #populateTakenPictures() {
     if (!this.#takenDocumentation) {
       document.getElementById('image-preview').innerHTML = '';
       return;
@@ -218,30 +170,6 @@ export default class CropRecommendationPage {
     }
 
     return null;
-  }
-
-  #setupCamera() {
-    if (this.#camera) {
-      return;
-    }
-
-    this.#camera = new Camera({
-      video: document.querySelector('#camera-video'),
-      cameraSelect: document.querySelector('#camera-select'),
-      canvas: document.querySelector('#camera-canvas')
-    })
-
-    this.#camera.addCheeseButtonListener('#camera-take-button', async () => {
-      const image = await this.#camera.takePicture();
-      // alert(URL.createObjectURL(image));
-      await this.#addTakenPicture(image);
-      await this.#populateTakenPictures();
-
-      const detectionButton = document.querySelector('.detection-button');
-      detectionButton ? detectionButton.classList.add('active') : null;
-
-      this.#setupDecationButton();
-    })
   }
 
   #setupDecationButton() {

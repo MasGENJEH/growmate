@@ -7,18 +7,24 @@ class App {
   #hamburgerMenu = null;
   #mobileNavigation = null;
   #navigation = null;
+  #sidebarMenu = null;
+  #mainMenu = null;
 
-  constructor({ content, hamburgerMenu, mobileNavigation, navigation }) {
+  constructor({ content, hamburgerMenu, mobileNavigation, navigation, sidebarMenu, mainMenu }) {
     this.#content = content;
     this.#hamburgerMenu = hamburgerMenu;
     this.#mobileNavigation = mobileNavigation;
     this.#navigation = navigation;
+    this.#sidebarMenu = sidebarMenu;
+    this.#mainMenu = mainMenu;
 
     this.#init();
   }
 
   #init() {
     this._setupHamburgerMenu();
+    this._setupSidebarMenu();
+    this._setupMainMenu();
   }
 
   _setupHamburgerMenu() {
@@ -26,6 +32,20 @@ class App {
       event.stopPropagation();
       this.#mobileNavigation.classList.toggle('active');
       this.#navigation.classList.toggle('active');
+    })
+  }
+
+  _setupSidebarMenu() {
+    this.#sidebarMenu.forEach(menu => {
+      menu.addEventListener('click', () => {
+        this.#mobileNavigation.classList.remove('active');
+      })
+    });
+  }
+
+  _setupMainMenu() {
+    this.#mainMenu.addEventListener('click', () => {
+      this.#mobileNavigation.classList.remove('active');
     })
   }
 
