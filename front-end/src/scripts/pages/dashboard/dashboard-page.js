@@ -49,7 +49,7 @@ export default class DashboardPage {
               <div class="description">
                 <h4>Hama</h4>
                 <p>Identifikasi jenis hama yang menyerang tanaman melalui gambar secara otomatis.</p>
-                <a href="#" class="btn more-button">Selengkapnya</a>
+                <a href="#/pest-classification" class="btn more-button">Selengkapnya</a>
               </div>
             </div>
             <div class="card">

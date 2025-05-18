@@ -68,6 +68,14 @@ export default class DiseaseClassificationPage {
                   </div>
                 </form>
               </div>
+              <div class="item" id="output">
+                <p class="title output-title"></p>
+                <p class="output-desc"></p>
+              </div>
+              <div class="item" id="suggestion">
+                <p class="title suggestion-title"></p>
+                <p class="suggestion-desc"></p>
+              </div>
             </div>
           </div>
         </div>
@@ -98,10 +106,10 @@ export default class DiseaseClassificationPage {
       const picture = this.#takenDocumentation;
 
       const html = `
-      <button type="button" data-deletepictureid="${picture.id}" class="new-form__documentations__outputs-item__delete-btn">
-        <img src="${picture.url}" alt="preview">
-      </button>
-    `;
+        <button type="button" data-deletepictureid="${picture.id}" class="new-form__documentations__outputs-item__delete-btn">
+          <img src="${picture.url}" alt="preview">
+        </button>
+      `;
 
       imagePreview.innerHTML = '';
       imagePreview.innerHTML = html;
@@ -116,10 +124,16 @@ export default class DiseaseClassificationPage {
 
         const detectionButton = document.querySelector('.detection-button');
         detectionButton ? detectionButton.classList.remove('active') : null;
+        
+        const output = document.querySelector('#output');
+        const suggestion = document.querySelector('#suggestion');
+
+        output ? output.classList.remove('active') : null;
+        suggestion ? suggestion.classList.remove('active') : null;
       });
       
       const detectionButton = document.querySelector('.detection-button');
-      detectionButton ? detectionButton.classList.toggle('active') : null;
+      detectionButton ? detectionButton.classList.add('active') : null;
 
       this.#setupDecationButton();
     }) : null
@@ -185,6 +199,12 @@ export default class DiseaseClassificationPage {
 
       const detectionButton = document.querySelector('.detection-button');
       detectionButton ? detectionButton.classList.remove('active') : null;
+
+      const output = document.querySelector('#output');
+      const suggestion = document.querySelector('#suggestion');
+
+      output ? output.classList.remove('active') : null;
+      suggestion ? suggestion.classList.remove('active') : null;
     });
   }
 
@@ -217,7 +237,7 @@ export default class DiseaseClassificationPage {
       await this.#populateTakenPictures();
 
       const detectionButton = document.querySelector('.detection-button');
-      detectionButton ? detectionButton.classList.toggle('active') : null;
+      detectionButton ? detectionButton.classList.add('active') : null;
 
       this.#setupDecationButton();
     })
@@ -227,66 +247,29 @@ export default class DiseaseClassificationPage {
     const detectionButton = document.querySelector('.detection-button');
     detectionButton ? detectionButton.addEventListener('click', (event) => {
       event.stopPropagation();
-      const mainRecommendationContent = document.querySelector('.main-recommendation-content');
-      const item = document.createElement('div');
-      item.classList.add('item');
-      const title = document.createElement('p');
-      title.classList.add('title');
-      title.innerHTML = '🔍 Hasil';
-      const paragraph = document.createElement('p');
-      paragraph.innerHTML = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultricies posuere ipsum eget fermentum. Maecenas sodales urna eu accumsan sodales. Duis non ipsum mollis, feugiat sem tempor, dapibus magna.';
-      item.appendChild(title);
-      item.appendChild(paragraph);
-      mainRecommendationContent.appendChild(item);  
+      
+      const output = document.querySelector('#output');
+      const suggestion = document.querySelector('#suggestion');
 
+      output ? output.classList.add('active') : null;
+      suggestion ? suggestion.classList.add('active') : null;
 
-      const item2 = document.createElement('div');
-      item2.classList.add('item');
-      const title2 = document.createElement('p');
-      title2.classList.add('title');
-      title2.innerHTML = '💡 Saran';
-      const paragraph2 = document.createElement('p');
-      paragraph2.innerHTML = 'Praesent nec consectetur neque, vel efficitur neque. Vestibulum non turpis a nisl ornare imperdiet vitae et nisi. Duis tincidunt lobortis tellus ac viverra. Sed suscipit varius imperdiet. Ut condimentum pretium odio, non blandit metus viverra id. Proin sollicitudin metus nec volutpat commodo.';
-      item2.appendChild(title2);
-      item2.appendChild(paragraph2);
-      mainRecommendationContent.appendChild(item2);
+      const outputTitle = document.querySelector('.output-title');
+      const outputDesc = document.querySelector('.output-desc');
+      const suggestionTitle = document.querySelector('.suggestion-title');
+      const suggestionDesc = document.querySelector('.suggestion-desc');
+ 
+      outputTitle ? outputTitle.textContent = '' : null;
+      outputTitle ? outputTitle.textContent = '🔍 Hasil' : null;
+      outputDesc ? outputDesc.textContent = '' : null;
+      outputDesc ? outputDesc.textContent = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultricies posuere ipsum eget fermentum. Maecenas sodales urna eu accumsan sodales. Duis non ipsum mollis, feugiat sem tempor, dapibus magna.' : null;
+
+      suggestionTitle ? suggestionTitle.textContent = '' : null;
+      suggestionTitle ? suggestionTitle.textContent = '💡 Saran' : null;
+      suggestionDesc ? suggestionDesc.textContent = '' : null;
+      suggestionDesc ? suggestionDesc.textContent = 'Praesent nec consectetur neque, vel efficitur neque. Vestibulum non turpis a nisl ornare imperdiet vitae et nisi. Duis tincidunt lobortis tellus ac viverra. Sed suscipit varius imperdiet. Ut condimentum pretium odio, non blandit metus viverra id. Proin sollicitudin metus nec volutpat commodo.' : null;
+
     }) : null;
   }
-
-  // #setupDecationButton() {
-  //   const detectionButton = document.querySelector('.detection-button');
-  //   detectionButton ? detectionButton.addEventListener('click', (event) => {
-  //     event.stopPropagation();
-
-  //     const mainRecommendationContent = document.querySelector('.main-recommendation-content');
-      
-  //     // Bersihkan hasil sebelumnya
-  //     const oldItems = mainRecommendationContent.querySelectorAll('.item.result-item');
-  //     oldItems.forEach(item => item.remove());
-
-  //     // Tambah hasil baru dengan class result-item agar bisa dihapus nanti
-  //     const item = document.createElement('div');
-  //     item.classList.add('item', 'result-item');
-  //     const title = document.createElement('p');
-  //     title.classList.add('title');
-  //     title.innerHTML = '🔍 Hasil';
-  //     const paragraph = document.createElement('p');
-  //     paragraph.innerHTML = 'Hasil deteksi penyakit akan ditampilkan di sini.';
-  //     item.appendChild(title);
-  //     item.appendChild(paragraph);
-  //     mainRecommendationContent.appendChild(item);  
-
-  //     const item2 = document.createElement('div');
-  //     item2.classList.add('item', 'result-item');
-  //     const title2 = document.createElement('p');
-  //     title2.classList.add('title');
-  //     title2.innerHTML = '💡 Saran';
-  //     const paragraph2 = document.createElement('p');
-  //     paragraph2.innerHTML = 'Saran penanganan penyakit akan ditampilkan di sini.';
-  //     item2.appendChild(title2);
-  //     item2.appendChild(paragraph2);
-  //     mainRecommendationContent.appendChild(item2);
-  //   }) : null;
-  // }
 
 }

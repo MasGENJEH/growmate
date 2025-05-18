@@ -502,7 +502,7 @@ header > .navigation > .container > .hamburger-menu > span {
   z-index: 3;
   text-align: center;
   font-weight: 800;
-  font-size: 70px;
+  font-size: 80px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -571,6 +571,17 @@ header > .navigation > .container > .hamburger-menu > span {
   flex-direction: column;
   gap: 10px;
   /* border: 1px solid red; */
+}
+
+.main-feature-content > .container > .recomendation > .bottom-content > .item#output,
+.main-feature-content > .container > .recomendation > .bottom-content > .item#suggestion {
+  /* border: 1px solid blue; */
+  display: none;
+}
+
+.main-feature-content > .container > .recomendation > .bottom-content > .item#output.active,
+.main-feature-content > .container > .recomendation > .bottom-content > .item#suggestion.active {
+  display: flex;
 }
 
 .main-feature-content > .container > .recomendation > .bottom-content > .item:nth-child(4) {
@@ -692,7 +703,7 @@ header > .navigation > .container > .hamburger-menu > span {
 
 .main-feature-content > .container > .recomendation > .bottom-content > .item > form > .camera-container {
   width: 100%;
-  /* border: 1px solid red; */
+  /* border: 1px solid blue; */
   display: none;
   flex-direction: column;
   justify-content: center;
