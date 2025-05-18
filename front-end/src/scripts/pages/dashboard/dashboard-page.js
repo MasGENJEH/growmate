@@ -38,7 +38,7 @@ export default class DashboardPage {
               <div class="description">
                 <h4>Rekomendasi</h4>
                 <p>Dapatkan rekomendasi tanaman terbaik berdasarkan kondisi tanah dan cuaca.</p>
-                <a href="#" class="btn more-button">Selengkapnya</a>
+                <a href="#/crop-recommendation" class="btn more-button">Selengkapnya</a>
               </div>
             </div>
             <div class="card">

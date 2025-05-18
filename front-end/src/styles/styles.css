@@ -840,3 +840,15 @@ footer > .container > p {
 ::-webkit-scrollbar-thumb:hover {
     background-color: #a8bbbf;
 }
+
+::view-transition-old(root) {
+  animation-name: full-slide-to-left;
+  animation-duration: 900ms;
+  animation-timing-function: ease-out;
+}
+
+::view-transition-new(root) {
+  animation-name: full-slide-from-right;
+  animation-duration: 900ms;
+  animation-timing-function: ease-out;
+}

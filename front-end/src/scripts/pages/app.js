@@ -46,7 +46,6 @@ class App {
     transition.ready.catch(console.error);
     transition.updateCallbackDone.then(() => {
       scrollTo({ top: 0, behavior: 'instant' });
-      this._setupHamburgerMenu();
     });
   }
 }

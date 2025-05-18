@@ -49,8 +49,6 @@ export default class DiseaseClassificationPage {
                     <input type="file" id="image-file" name="image-file" style="display: none">
                   </div>
                   <div class="camera-container" id="camera-container">
-                    
-
                     <video id="camera-video" class="camera-video" autoplay playsinline>
                       Video stream not available.
                     </video>
