@@ -1,10 +1,6 @@
-import Camera from "../../utils/camera.js";
-import { convertBase64ToBlob } from '../../utils/index.js';
 
 export default class CropRecommendationPage {
   #takenDocumentation = null;
-  #camera;
-  #isCameraOpen = false;
 
   async render() {
     return `
@@ -27,20 +23,19 @@ export default class CropRecommendationPage {
 
             <div class="bottom-content main-recommendation-content">
               <div class="item">
-                <p class="title">🌱 Daftar Penyakit yang Bisa Dideteksi</p>
-                <p>Tampilkan jenis-jenis penyakit tanaman umum yang bisa dikenali oleh sistem.</p>
+                <p class="title">🔍 Data yang Digunakan</p>
+                <p>Sistem ini menggunakan data seperti kandungan Nitrogen (N), Fosfor (P), Kalium (K), suhu, kelembapan, pH tanah, dan curah hujan untuk memberikan rekomendasi tanaman yang paling sesuai dengan kondisi lingkungan Anda.</p>
               </div>
               <div class="item">
                 <p class="title">🤖 Keunggulan Teknologi yang Digunakan</p>
-                <p>Didukung oleh model AI yang telah dilatih dengan ribuan gambar penyakit tanaman untuk akurasi deteksi yang tinggi.</p>
+                <p>Didukung oleh model machine learning yang dilatih menggunakan dataset pertanian, sistem ini mampu memberikan rekomendasi tanaman dengan akurasi tinggi berdasarkan input numerik.</p>
               </div>
               <div class="item">
-                <p class="title">📸 Tips Foto yang Efektif untuk Deteksi</p>
+                <p class="title">📂 Cara Menggunakan Sistem Ini</p>
                 <ul>
-                  <li>Ambil foto dengan pencahayaan yang baik.</li>
-                  <li>Pastikan daun atau bagian tanaman terlihat jelas.</li>
-                  <li>Hindari foto yang terlalu jauh atau terlalu dekat.</li>
-                  <li>Usahakan untuk tidak ada objek lain yang menghalangi bagian tanaman yang ingin dideteksi.</li>
+                  <li>Unggah file CSV berisi parameter lingkungan (seperti contoh: N, P, K, suhu, dll).</li>
+                  <li>Sistem akan menganalisis data dan merekomendasikan jenis tanaman yang optimal.</li>
+                  <li>Tidak memerlukan gambar atau proses pemindaian visual tanaman.</li>
                 </ul>
               </div>
               <div class="item">
@@ -88,15 +83,30 @@ export default class CropRecommendationPage {
         id: `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
         blob: file,
         url: URL.createObjectURL(file),
+        type: file.type,
+        name: file.name
       };
 
       const picture = this.#takenDocumentation;
 
-      const html = `
-        <button type="button" data-deletepictureid="${picture.id}" class="new-form__documentations__outputs-item__delete-btn">
-          <img src="${picture.url}" alt="preview">
-        </button>
-      `;
+      let html = '';
+
+      if (picture.type.startsWith('image/')) {
+        html = `
+          <button type="button" data-deletepictureid="${picture.id}" class="new-form__documentations__outputs-item__delete-btn">
+            <img src="${picture.url}" alt="preview">
+          </button>
+        `;
+      } else {
+        html = `
+          <button type="button" data-deletepictureid="${picture.id}" class="new-form__documentations__outputs-item__delete-btn">
+            <div class="file-preview">
+              <i class="bi bi-file-earmark-text"></i>
+              <p>${picture.name}</p>
+            </div>
+          </button>
+        `;
+      }
 
       imagePreview.innerHTML = '';
       imagePreview.innerHTML = html;
@@ -126,22 +136,37 @@ export default class CropRecommendationPage {
     }) : null
   }
 
-   async #populateTakenPictures() {
+  async #populateTakenPictures() {
+    const imagePreview = document.querySelector('#image-preview');
+
     if (!this.#takenDocumentation) {
-      document.getElementById('image-preview').innerHTML = '';
+      imagePreview.innerHTML = '';
       return;
     }
 
     const picture = this.#takenDocumentation;
     const imageUrl = URL.createObjectURL(picture.blob);
 
-    const html = `
-      <button type="button" data-deletepictureid="${picture.id}" class="new-form__documentations__outputs-item__delete-btn">
-        <img src="${imageUrl}" alt="preview">
-      </button>
-    `;
+    let html = '';
 
-    document.getElementById('image-preview').innerHTML = html;
+    if (picture.type.startsWith('image/')) {
+      html = `
+        <button type="button" data-deletepictureid="${picture.id}" class="new-form__documentations__outputs-item__delete-btn">
+          <img src="${imageUrl}" alt="preview">
+        </button>
+      `;
+    } else {
+      html = `
+        <button type="button" data-deletepictureid="${picture.id}" class="new-form__documentations__outputs-item__delete-btn">
+          <div class="file-preview">
+            <i class="bi bi-file-earmark-text"></i>
+            <p>${picture.name}</p>
+          </div>
+        </button>
+      `;
+    }
+
+    imagePreview.innerHTML = html;
 
     document.querySelector('button[data-deletepictureid]')?.addEventListener('click', (event) => {
       const pictureId = event.currentTarget.dataset.deletepictureid;

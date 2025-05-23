@@ -660,6 +660,7 @@ header > .navigation > .container > .hamburger-menu > span {
   padding: 0 !important;
   border: 6px solid #E9E9E9 !important;
   border-radius: 5px;
+  /* background-color: #ebebeb; */
 }
 
 .main-feature-content > .container > .recomendation > .bottom-content > .item > form > .image-preview > .new-form__documentations__outputs-item__delete-btn > img {
