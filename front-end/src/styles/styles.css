@@ -261,6 +261,34 @@ header > .navigation > .container > .hamburger-menu > span {
   min-height: 20px;
 }
 
+.growmate-content > .container > .main-content {
+  width: 100%;
+  min-height: 100px;
+  /* border: 1px solid red; */
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.growmate-content > .container > .main-content > section {
+  width: 100%;
+  /* border: 1px solid red; */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.growmate-content > .container > .main-content > section > .item {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.growmate-content > .container > .main-content > section > h3,
+.growmate-content > .container > .main-content > section > .item > h5 {
+  font-weight: 600;
+}
+
 .growmate-content > .container > .jumbotron {
   /* border: 1px solid red; */
   width: 100%;
