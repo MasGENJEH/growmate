@@ -1,65 +1,68 @@
-# Import library Flask untuk membuat web server, CORS untuk akses dari domain lain
-from flask import Flask, request, jsonify
-from flask_cors import CORS
-
-# Import library TensorFlow dan utilitas untuk memproses gambar
+# Import library yang dibutuhkan
+from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing import image
 import numpy as np
-import os
 import json
+from PIL import Image
+import io
 
-# Inisialisasi aplikasi Flask
-app = Flask(__name__, static_folder='../../front-end/(selanjutnya saya tak tahu)', static_url_path='/')
-CORS(app)
+# Inisialisasi aplikasi FastAPI
+app = FastAPI()
 
-# Aktifkan CORS supaya frontend bisa akses API meskipun beda port/domain
-CORS(app)
+# Mengaktifkan CORS agar API dapat diakses dari frontend (berbeda origin)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Mengizinkan semua domain
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-# Load model deep learning yang sudah dilatih sebelumnya
-model = load_model('saved_model/model_hama.h5')
+# Path ke model dan label
+MODEL_PATH = 'saved_model/model_hama.h5'
+LABELS_PATH = 'saved_model/class_labels.json'
 
-# Load file JSON yang berisi label klasifikasi (misal: 'ulat grayak', 'belalang', dll.)
-with open('saved_model/class_labels.json', 'r') as f:
+# Load model klasifikasi
+model = load_model(MODEL_PATH)
+
+# Load daftar label kelas dari file JSON
+with open(LABELS_PATH, 'r') as f:
     class_labels = json.load(f)
 
-# Endpoint default '/' untuk mengirimkan file index.html ke browser
-@app.route('/')
-def serve_index():
-    return app.send_static_file('index.html')  # ganti yang sesuai yaaa wkwk
+# Endpoint untuk melakukan prediksi gambar
+@app.post("/predict")
+async def predict(file: UploadFile = File(...)):
+    """
+    Menerima file gambar, melakukan praproses, 
+    lalu mengembalikan hasil klasifikasi.
+    """
+    if not file.filename:
+        raise HTTPException(status_code=400, detail="Empty file name")
 
-# Endpoint '/predict' untuk melakukan klasifikasi gambar
-@app.route('/predict', methods=['POST'])
-def predict():
-    # Periksa apakah request mengandung file
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file uploaded'}), 400
+    try:
+        # Membaca isi file gambar dari request
+        contents = await file.read()
+        
+        # Membuka gambar menggunakan PIL dan memprosesnya
+        img = Image.open(io.BytesIO(contents))
+        img = img.convert("RGB")             # Konversi ke RGB (3 channel)
+        img = img.resize((224, 224))         # Resize sesuai input model
 
-    # Ambil file dari request
-    file = request.files['file']
+        # Konversi gambar ke array dan normalisasi piksel
+        img_array = np.array(img) / 255.0
+        img_array = np.expand_dims(img_array, axis=0)  # Tambah dimensi batch
 
-    # Simpan file sementara di folder 'uploads'
-    filepath = os.path.join('uploads', file.filename)
-    os.makedirs('uploads', exist_ok=True)  # Pastikan folder uploads ada
-    file.save(filepath)
+        # Melakukan prediksi
+        prediction = model.predict(img_array)
+        class_index = int(np.argmax(prediction))       # Ambil index hasil tertinggi
+        class_name = class_labels[class_index]         # Ambil nama kelas dari label
 
-    # Baca gambar dan ubah ukurannya agar sesuai input model
-    img = image.load_img(filepath, target_size=(224, 224))
-    img_array = image.img_to_array(img) / 255.0  # Normalisasi nilai piksel 0-1
-    img_array = np.expand_dims(img_array, axis=0)  # Tambahkan dimensi batch
+        # Kembalikan hasil prediksi
+        return {
+            "prediction": class_name,
+        }
 
-    # Lakukan prediksi menggunakan model
-    prediction = model.predict(img_array)
-
-    # Ambil index kelas dengan probabilitas tertinggi
-    class_index = int(np.argmax(prediction))
-
-    # Ambil nama kelas dari file label
-    class_name = class_labels[class_index]
-
-    # Kirimkan hasil prediksi ke frontend dalam format JSON
-    return jsonify({'prediction': class_name})
-
-# Jalankan aplikasi di mode debug (tidak untuk production)
-if __name__ == '__main__':
-    app.run(debug=True)
+    except Exception as e:
+        # Tangani error jika prediksi gagal
+        raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
