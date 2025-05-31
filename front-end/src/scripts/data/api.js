@@ -1,18 +1,10 @@
-import CONFIG from '../config.js';
+import CONFIG from '../config';
 
-// api.js
 const ENDPOINTS = {
-  PREDICT: `${CONFIG.BASE_URL}/predict`,
+  ENDPOINT: `${CONFIG.BASE_URL}/your/endpoint/here`,
 };
 
-export async function predictPest(imageBlob) {
-  const formData = new FormData();
-  formData.append('file', imageBlob);
-
-  const response = await fetch(ENDPOINTS.PREDICT, {
-    method: 'POST',
-    body: formData,
-  });
-
-  return await response.json();
+export async function getData() {
+  const fetchResponse = await fetch(ENDPOINTS.ENDPOINT);
+  return await fetchResponse.json();
 }

@@ -1,6 +1,5 @@
 import Camera from "../../utils/camera.js";
 import { convertBase64ToBlob } from '../../utils/index.js';
-import { predictPest } from '../../data/api.js';
 
 export default class PestClassificationPage {
   #takenDocumentation = null;
@@ -39,7 +38,7 @@ export default class PestClassificationPage {
                 <ul>
                   <li>Ambil foto dengan pencahayaan yang baik.</li>
                   <li>Pastikan daun atau bagian tanaman terlihat jelas.</li>
-		  <li>Hindari foto yang terlalu jauh atau terlalu dekat.</li>
+                  <li>Hindari foto yang terlalu jauh atau terlalu dekat.</li>
                   <li>Usahakan untuk tidak ada objek lain yang menghalangi bagian tanaman yang ingin dideteksi.</li>
                 </ul>
               </div>
@@ -52,20 +51,21 @@ export default class PestClassificationPage {
                   </div>
                   <div class="camera-container" id="camera-container">
                     <video id="camera-video" class="camera-video" autoplay playsinline>
-			Video stream not available.
-		    </video>
+                      Video stream not available.
+                    </video>
 
                     <canvas id="camera-canvas" class="new-form__camera__canvas"></canvas>
+
                     <div class="new-form__camera__tools">
                       <select class="form-select" id="camera-select"></select>
                       <button id="camera-take-button" class="btn camera-take-button" type="button">
-			Ambil Gambar
-		      </button>
+                        Ambil Gambar
+                      </button>
                     </div>
                   </div>
                   <div class="image-preview" id="image-preview"></div>
                   <div class="detection-button-container" id="detection-button-container">
-                    <button type="button" class="detection-button">Deteksi Sekarang</button>
+                    <button type="button" class="detection-button"> Deteksi Sekarang</button>
                   </div>
                 </form>
               </div>
@@ -112,51 +112,51 @@ export default class PestClassificationPage {
         </button>
       `;
 
-      imagePreview.innerHTML = html;
+      imagePreview.innerHTML = '';
       imagePreview.innerHTML = html;
 
       document.querySelector('button[data-deletepictureid]')?.addEventListener('click', (event) => {
         const pictureId = event.currentTarget.dataset.deletepictureid;
         const deleted = this.#removePicture(pictureId);
         if (!deleted) {
-	  console.log(`Picture with id ${pictureId} was not found`);
-	}
+          console.log(`Picture with id ${pictureId} was not found`);
+        }
         this.#populateTakenPictures();
 
         const detectionButton = document.querySelector('.detection-button');
-	      detectionButton ? detectionButton.classList.remove('active') : null;
-
+        detectionButton ? detectionButton.classList.remove('active') : null;
+        
         const output = document.querySelector('#output');
         const suggestion = document.querySelector('#suggestion');
 
-	      output ? output.classList.remove('active') : null;
+        output ? output.classList.remove('active') : null;
         suggestion ? suggestion.classList.remove('active') : null;
       });
-
+      
       const detectionButton = document.querySelector('.detection-button');
       detectionButton ? detectionButton.classList.add('active') : null;
 
-      this.#setupDetectionButton();
+      this.#setupDecationButton();
     }) : null
 
     const cameraContainer = document.querySelector('#camera-container');
     const cameraButton = document.querySelector('.camera-button');
-    cameraButton ? cameraButton.addEventListener('click', async (event) => {
+    cameraButton ? cameraButton.addEventListener('click', async(event) => {
       
       cameraContainer.classList.toggle('active');
       this.#isCameraOpen = cameraContainer.classList.contains('active');
-
+      
       if (this.#isCameraOpen) {
         event.currentTarget.textContent = 'Tutup Kamera';
         this.#setupCamera();
         this.#camera.launch();
-	return;
+        return;
       }
 
       event.currentTarget.textContent = 'Buka Kamera';
       this.#camera.stop();
     }) : null
-    
+
   }
 
   async #addTakenPicture(image) {
@@ -194,7 +194,7 @@ export default class PestClassificationPage {
       const pictureId = event.currentTarget.dataset.deletepictureid;
       const deleted = this.#removePicture(pictureId);
       if (!deleted) {
-	console.log(`Picture with id ${pictureId} was not found`);
+        console.log(`Picture with id ${pictureId} was not found`);
       }
       this.#populateTakenPictures();
 
@@ -227,7 +227,7 @@ export default class PestClassificationPage {
     this.#camera = new Camera({
       video: document.querySelector('#camera-video'),
       cameraSelect: document.querySelector('#camera-select'),
-      canvas: document.querySelector('#camera-canvas'),
+      canvas: document.querySelector('#camera-canvas')
     })
 
     this.#camera.addCheeseButtonListener('#camera-take-button', async () => {
@@ -239,18 +239,15 @@ export default class PestClassificationPage {
       const detectionButton = document.querySelector('.detection-button');
       detectionButton ? detectionButton.classList.add('active') : null;
 
-      this.#setupDetectionButton();
+      this.#setupDecationButton();
     })
   }
 
-  #setupDetectionButton() {
+  #setupDecationButton() {
     const detectionButton = document.querySelector('.detection-button');
-    detectionButton?.addEventListener('click', async (event) => {
+    detectionButton ? detectionButton.addEventListener('click', (event) => {
       event.stopPropagation();
-      if (!this.#takenDocumentation?.blob) return;
-
-      const result = await predictPest(this.#takenDocumentation.blob);
-
+      
       const output = document.querySelector('#output');
       const suggestion = document.querySelector('#suggestion');
 
@@ -261,17 +258,18 @@ export default class PestClassificationPage {
       const outputDesc = document.querySelector('.output-desc');
       const suggestionTitle = document.querySelector('.suggestion-title');
       const suggestionDesc = document.querySelector('.suggestion-desc');
-
+ 
       outputTitle ? outputTitle.textContent = '' : null;
       outputTitle ? outputTitle.textContent = '🔍 Hasil' : null;
-      document.querySelector('.output-desc').textContent = result?.prediction || 'Tidak ada hasil.';
+      outputDesc ? outputDesc.textContent = '' : null;
+      outputDesc ? outputDesc.textContent = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut ultricies posuere ipsum eget fermentum. Maecenas sodales urna eu accumsan sodales. Duis non ipsum mollis, feugiat sem tempor, dapibus magna.' : null;
 
       suggestionTitle ? suggestionTitle.textContent = '' : null;
       suggestionTitle ? suggestionTitle.textContent = '💡 Saran' : null;
       suggestionDesc ? suggestionDesc.textContent = '' : null;
       suggestionDesc ? suggestionDesc.textContent = 'Praesent nec consectetur neque, vel efficitur neque. Vestibulum non turpis a nisl ornare imperdiet vitae et nisi. Duis tincidunt lobortis tellus ac viverra. Sed suscipit varius imperdiet. Ut condimentum pretium odio, non blandit metus viverra id. Proin sollicitudin metus nec volutpat commodo.' : null;
 
-    });
+    }) : null;
   }
 
 };
